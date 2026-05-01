@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "matrix.h"
+#include <assert.h>
+#include "../interfaces/matrix.h"
 
 // Debería reservar y liberar memoria correctamente
 // Verificar manejo memoria, no importa los valores dentro de la matriz
@@ -24,5 +25,5 @@ int main() {
     test_alloc_free();
 
     printf("Todos los Test de Matrix exitosos =)\n");
-    return;
+    return 0;
 }

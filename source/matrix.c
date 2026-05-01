@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "matrix.h"
+#include "../interfaces/matrix.h"
 
 double** allocMatrix(int n) {
     double** M = malloc(n * sizeof(double*));
