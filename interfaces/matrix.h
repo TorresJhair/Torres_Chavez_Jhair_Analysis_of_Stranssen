@@ -19,4 +19,10 @@ void zeroMatrix(double** M, int n);
 // Compara dos matrices, retorna 1 si son iguales; 0 si no son iguales
 int equalMatrix(double** A, double** B, int n);
 
+// Suma dos matrices (C = A + B)
+void addMatrix(double** A, double** B, double** C, int n);
+
+// Resta dos matrices (C = A - B)
+void subMatrix(double** A, double** B, double** C, int n);
+
 #endif

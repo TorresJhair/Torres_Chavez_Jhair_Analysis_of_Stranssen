@@ -33,7 +33,6 @@ void zeroMatrix(double** M, int n) {
 }
 
 int equalMatrix(double** A, double** B, int n) {
-    // Tolerancia absoluta para comparar doubles
     double EPS =  1e-9;
 
     for (int i = 0; i < n; i++) {
@@ -43,24 +42,24 @@ int equalMatrix(double** A, double** B, int n) {
             double b = B[i][j];
             double diff = fabs(a - b);
 
-            // comparación robusta (relativa + absoluta)
             double scale = fmax(fabs(a), fabs(b));
 
-            // Tolerancia absoluta: EPS, falla para números grandes: 
-            // a = 1,000,000
-            // b = 1,000,000.000001
-            // diferencia = 1e-6, EPS = 1e-9
-
-            // Tolerancia relativa (1.0 + scale): ayuda con los números grandes.
-            // Importa qué tan grande es el error comparado con el valor
-            
-            // Analogía simple
-            // Error de 1 dólar: en 10 dólares → mucho (10%)
-            // en 1,000,000 dólares → insignificante
             if (diff > EPS * (1.0 + scale)) {
                 return 0;
             }
         }
     }
     return 1;
+}
+
+void addMatrix(double** A, double** B, double** C, int n) {
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            C[i][j] = A[i][j] + B[i][j];
+}
+
+void subMatrix(double** A, double** B, double** C, int n) {
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            C[i][j] = A[i][j] - B[i][j];
 }
