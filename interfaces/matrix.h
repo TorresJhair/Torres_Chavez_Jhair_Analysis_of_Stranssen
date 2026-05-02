@@ -13,4 +13,7 @@ void copyMatrix(double** A, double** B, int n);
 // Rellenar valores random a matriz A
 void randomMatrix(double** A, int n);
 
+// Rellenar con 0's la matriz M
+void zeroMatrix(int** M, int n);
+
 #endif

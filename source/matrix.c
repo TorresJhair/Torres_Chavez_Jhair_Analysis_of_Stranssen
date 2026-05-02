@@ -25,3 +25,8 @@ void randomMatrix(double** A, int n) {
         for (int j = 0; j < n; j++)
             A[i][j] = rand() % 10;
 }
+
+void zeroMatrix(int** M, int n) {
+    for (int i = 0; i < n; i++)
+        memset(M[i], 0, n * sizeof(int));
+}
