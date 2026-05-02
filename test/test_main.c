@@ -3,6 +3,7 @@
 // sub main tests
 int test_main_mult_matrix();
 int test_main_matrix();
+int test_main_strassen();
 
 // MAIN REAL DE TESTS
 int main() {
@@ -13,6 +14,9 @@ int main() {
     printf("\n");
 
     test_main_mult_matrix();
+    printf("\n");
+
+    test_main_strassen();
     printf("\n");
 
     printf("Todos tests Exitosos =)\n");
