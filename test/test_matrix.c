@@ -16,7 +16,6 @@ void test_alloc_free() {
         assert(A[i] != NULL);
 
     freeMatrix(A, n);
-    printf("Test alloc/free: OK\n");
 }
 
 // Debería copiar los valores de una Matriz A (origen) a Matriz B (destino)
@@ -85,7 +84,7 @@ void test_zero_matrix() {
     freeMatrix(M, n);
 }
 
-int main() {
+int test_main_matrix() {
     printf("Tests Matrix\n");
 
     test_alloc_free();
