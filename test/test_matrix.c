@@ -68,7 +68,7 @@ void test_random_matrix_range() {
 void test_zero_matrix() {
     int n = 4;
 
-    int** M = allocMatrix(n);
+    double** M = allocMatrix(n);
 
     // llenar con basura
     for (int i = 0; i < n; i++)

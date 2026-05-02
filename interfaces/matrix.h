@@ -14,6 +14,9 @@ void copyMatrix(double** A, double** B, int n);
 void randomMatrix(double** A, int n);
 
 // Rellenar con 0's la matriz M
-void zeroMatrix(int** M, int n);
+void zeroMatrix(double** M, int n);
+
+// Compara dos matrices, retorna 1 si son iguales; 0 si no son iguales
+int equalMatrix(double** A, double** B, int n);
 
 #endif
