@@ -103,6 +103,46 @@ void test_strassen_zero_matrix() {
     freeMatrix(C, n);
 }
 
+void test_strassen_5x5() {
+    int n = 5;
+
+    double** A = allocMatrix(n);
+    double** B = allocMatrix(n);
+    double** C_strassen = allocMatrix(n);
+    double** C_classic = allocMatrix(n);
+
+    srand(42);
+    randomMatrix(A, n);
+    randomMatrix(B, n);
+
+    strassen(A, B, C_strassen, n);
+    mult_classic(A, B, C_classic, n);
+
+    printf("=== CORRECT MATRIX ===\n");
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            printf("%f\t", C_classic[i][j]);
+        }
+        putchar('\n');
+    }
+
+    // Strassen tiene como caso especial cuando n NO es potencia de 2 
+    printf("=== Strassen MATRIX ===\n");
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            printf("%f\t", C_strassen[i][j]);
+        }
+        putchar('\n');
+    }
+
+    assert(equalMatrix(C_strassen, C_classic, n));
+
+    freeMatrix(A, n);
+    freeMatrix(B, n);
+    freeMatrix(C_strassen, n);
+    freeMatrix(C_classic, n);
+}
+
 int test_main_strassen() {
     printf("Tests Strassen\n");
 
@@ -110,6 +150,7 @@ int test_main_strassen() {
     test_strassen_4x4();
     test_strassen_identity();
     test_strassen_zero_matrix();
+    test_strassen_5x5();
 
     printf("Todos los Tests de strassen exitosos =)\n");
     return 0;
