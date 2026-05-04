@@ -15,7 +15,9 @@ MAIN = $(BUILD)/main
 # =========================
 
 run: main
-	@./$(MAIN)
+	@echo "📊 Ejecutando benchmark (resultados en $(BUILD)/results.txt)..."
+	@./$(MAIN) > results.txt
+	@echo "* Benchmark completado"
 
 main:
 	@mkdir -p $(BUILD)
