@@ -3,45 +3,36 @@
 #include "../interfaces/matrix.h"
 #include <math.h>
 
-double** allocMatrix(int n) {
-    double** M = malloc(n * sizeof(double*));
-    for (int i = 0; i < n; i++)
-        M[i] = malloc(n * sizeof(double));
-    return M;
+double* allocMatrix(int n) {
+    return malloc(n * n * sizeof(double));
 }
 
-void freeMatrix(double** M, int n) {
-    for (int i = 0; i < n; i++)
-        free(M[i]);
+void freeMatrix(double* M) {
     free(M);
 }
 
-void copyMatrix(double** A, double** B, int n) {
-    for (int i = 0; i < n; i++)
-        memcpy(B[i], A[i], n * sizeof(double));
+void copyMatrix(double* A, double* B, int n) {
+    memcpy(B, A, n * n * sizeof(double));
 }
 
-void randomMatrix(double** A, int n) {
+void randomMatrix(double* A, int n) {
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            A[i][j] = rand() % 10;
+            A[i * n + j] = rand() % 10;
 }
 
-void zeroMatrix(double** M, int n) {
-    for (int i = 0; i < n; i++)
-        memset(M[i], 0, n * sizeof(double));
+void zeroMatrix(double* M, int n) {
+    memset(M, 0, n * n * sizeof(double));
 }
 
-int equalMatrix(double** A, double** B, int n) {
-    double EPS =  1e-9;
+int equalMatrix(double* A, double* B, int n) {
+    double EPS = 1e-9;
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-
-            double a = A[i][j];
-            double b = B[i][j];
+            double a = A[i * n + j];
+            double b = B[i * n + j];
             double diff = fabs(a - b);
-
             double scale = fmax(fabs(a), fabs(b));
 
             if (diff > EPS * (1.0 + scale)) {
@@ -52,14 +43,14 @@ int equalMatrix(double** A, double** B, int n) {
     return 1;
 }
 
-void addMatrix(double** A, double** B, double** C, int n) {
+void addMatrix(double* A, double* B, double* C, int n) {
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            C[i][j] = A[i][j] + B[i][j];
+            C[i * n + j] = A[i * n + j] + B[i * n + j];
 }
 
-void subMatrix(double** A, double** B, double** C, int n) {
+void subMatrix(double* A, double* B, double* C, int n) {
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            C[i][j] = A[i][j] - B[i][j];
+            C[i * n + j] = A[i * n + j] - B[i * n + j];
 }
