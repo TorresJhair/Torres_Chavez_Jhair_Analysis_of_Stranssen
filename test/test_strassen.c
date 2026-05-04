@@ -118,23 +118,6 @@ void test_strassen_5x5() {
     strassen(A, B, C_strassen, n);
     mult_classic(A, B, C_classic, n);
 
-    printf("=== CORRECT MATRIX ===\n");
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            printf("%f\t", C_classic[i][j]);
-        }
-        putchar('\n');
-    }
-
-    // Strassen tiene como caso especial cuando n NO es potencia de 2 
-    printf("=== Strassen MATRIX ===\n");
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            printf("%f\t", C_strassen[i][j]);
-        }
-        putchar('\n');
-    }
-
     assert(equalMatrix(C_strassen, C_classic, n));
 
     freeMatrix(A, n);

@@ -8,7 +8,7 @@
 #include "interfaces/benchmark.h"
 
 #define SEED 42
-#define MATRIX_SIZE 64
+#define MATRIX_SIZE 256
 #define STEP 2
 
 int main() {

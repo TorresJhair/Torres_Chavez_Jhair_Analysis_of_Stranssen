@@ -11,8 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Instalar valgrind
-        run: sudo apt-get update && sudo apt-get install -y gcc make valgrind
+      - name: Instalar dependencias
+        run: sudo apt-get update && sudo apt-get install -y gcc make valgrind gnuplot
 
       - name: Correr tests with Valgrind
         run: make tests
+
+      - name: Ejecutar el experimento (benchmark)
+        run: make run
