@@ -1,16 +1,29 @@
 CC = gcc
 
-CFLAGS = -O2 -std=c11 -Wall -Wextra -Iinclude
-DBGFLAGS = -g -O0 -std=c11 -Wall -Wextra -Iinclude
+CFLAGS = -O3 -std=c11 -Wall -Wextra -Iinterfaces
+DBGFLAGS = -g -O0 -std=c11 -Wall -Wextra -Iinterfaces
 
 SRC = source/*.c
 TEST = test/*.c
 
 BUILD = build
 BIN = $(BUILD)/test_matrix
+MAIN = $(BUILD)/main
 
 # =========================
-# ÚNICO comando
+# Compilar y ejecutar main
+# =========================
+
+run: main
+	@./$(MAIN)
+
+main:
+	@mkdir -p $(BUILD)
+	@echo "🔧 Compiling main..."
+	$(CC) $(CFLAGS) $(SRC) main.c -o $(MAIN) -lm
+
+# =========================
+# Tests con Valgrind
 # =========================
 
 tests:
