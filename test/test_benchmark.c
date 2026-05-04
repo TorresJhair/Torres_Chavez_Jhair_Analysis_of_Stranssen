@@ -77,6 +77,58 @@ void test_measure_strassen_returns_positive() {
     freeMatrix(C, n);
 }
 
+void test_measure_classic_result_correct() {
+    // Verificar que medir no altera el resultado
+    int n = 3;
+    double** A = allocMatrix(n);
+    double** B = allocMatrix(n);
+    double** C = allocMatrix(n);
+    double** expected = allocMatrix(n);
+
+    A[0][0]=1; A[0][1]=2; A[0][2]=3;
+    A[1][0]=4; A[1][1]=5; A[1][2]=6;
+    A[2][0]=7; A[2][1]=8; A[2][2]=9;
+
+    B[0][0]=9; B[0][1]=8; B[0][2]=7;
+    B[1][0]=6; B[1][1]=5; B[1][2]=4;
+    B[2][0]=3; B[2][1]=2; B[2][2]=1;
+
+    expected[0][0]=30; expected[0][1]=24; expected[0][2]=18;
+    expected[1][0]=84; expected[1][1]=69; expected[1][2]=54;
+    expected[2][0]=138;expected[2][1]=114;expected[2][2]=90;
+
+    measureClassicMult(A, B, C, n);
+    assert(equalMatrix(expected, C, n));
+
+    freeMatrix(A, n);
+    freeMatrix(B, n);
+    freeMatrix(C, n);
+    freeMatrix(expected, n);
+}
+
+void test_measure_strassen_result_correct() {
+    // Verificar que medir no altera el resultado
+    int n = 3;
+    double** A = allocMatrix(n);
+    double** B = allocMatrix(n);
+    double** C = allocMatrix(n);
+    double** expected = allocMatrix(n);
+
+    srand(5);
+    randomMatrix(A, n);
+    randomMatrix(B, n);
+
+    mult_classic(A, B, expected, n);
+    measureStrassen(A, B, C, n);
+
+    assert(equalMatrix(expected, C, n));
+
+    freeMatrix(A, n);
+    freeMatrix(B, n);
+    freeMatrix(C, n);
+    freeMatrix(expected, n);
+}
+
 int test_main_benchmark() {
     printf("Tests Benchmark\n");
 
@@ -86,6 +138,8 @@ int test_main_benchmark() {
     test_elapsed_nanoseconds_exact_second();
     test_measure_classic_returns_positive();
     test_measure_strassen_returns_positive();
+    test_measure_classic_result_correct();
+    test_measure_strassen_result_correct();
 
     printf("Todos los Tests de benchmark exitosos =)\n");
     return 0;
