@@ -15,9 +15,12 @@ MAIN = $(BUILD)/main
 # =========================
 
 run: main
-	@echo "📊 Ejecutando benchmark (resultados en $(BUILD)/results.txt)..."
+	@echo "📊 Ejecutando benchmark (resultados en results.txt)..."
 	@./$(MAIN) > results.txt
-	@echo "* Benchmark completado"
+	@echo "✅ Benchmark completado"
+	@echo "📈 Generando gráfico..."
+	@gnuplot scripts/plot.gnuplot
+	@echo "✅ Gráfico generado en plot.png"
 
 main:
 	@mkdir -p $(BUILD)
