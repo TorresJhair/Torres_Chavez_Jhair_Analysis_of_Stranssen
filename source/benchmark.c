@@ -21,8 +21,8 @@ long long elapsedNanoseconds(struct timespec start, struct timespec end) {
 
 // CLOCK_MONOTONIC se usa porque no se ve afectado por cambios de hora
 // del sistema (ajuste de red, ajustes manuales), como CLOCK_REALTIME,
-// garantizando mediciones precisas. 
-double measureClassicMult(double** A, double** B, double** C, int n) {
+// garantizando mediciones precisas.
+double measureClassicMult(double* A, double* B, double* C, int n) {
     struct timespec start;
     struct timespec end;
 
@@ -38,7 +38,7 @@ double measureClassicMult(double** A, double** B, double** C, int n) {
 }
 
 // Mismo esquema de medición que measureClassicMult para que sean comparables
-double measureStrassen(double** A, double** B, double** C, int n) {
+double measureStrassen(double* A, double* B, double* C, int n) {
     struct timespec start;
     struct timespec end;
 
