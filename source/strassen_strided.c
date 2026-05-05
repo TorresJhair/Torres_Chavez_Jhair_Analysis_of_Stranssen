@@ -9,24 +9,36 @@ static int next_power_of_2(int n) {
     return p;
 }
 
-static void strassen_recursive_strided(double* A, int a_stride, double* B, int b_stride, double* C, int c_stride, int n) {
+// Compute workspace size needed for strassen with size n (must be power of 2)
+static int workspace_size(int n) {
+    if (n <= 1) return 0;
+    int h = n / 2;
+    return 9 * h * h + workspace_size(h);
+}
+
+static void strassen_recursive_strided_ws(double* A, int a_stride, double* B, int b_stride,
+                                           double* C, int c_stride, int n, double* ws) {
     if (n == 1) {
         C[0] = A[0] * B[0];
         return;
     }
 
     int h = n / 2;
+    int h_sq = h * h;
 
-    double* M1 = allocMatrix(h);
-    double* M2 = allocMatrix(h);
-    double* M3 = allocMatrix(h);
-    double* M4 = allocMatrix(h);
-    double* M5 = allocMatrix(h);
-    double* M6 = allocMatrix(h);
-    double* M7 = allocMatrix(h);
+    // Carve out temporaries from workspace
+    double* M1 = ws;
+    double* M2 = ws + 1 * h_sq;
+    double* M3 = ws + 2 * h_sq;
+    double* M4 = ws + 3 * h_sq;
+    double* M5 = ws + 4 * h_sq;
+    double* M6 = ws + 5 * h_sq;
+    double* M7 = ws + 6 * h_sq;
+    double* T1 = ws + 7 * h_sq;
+    double* T2 = ws + 8 * h_sq;
 
-    double* T1 = allocMatrix(h);
-    double* T2 = allocMatrix(h);
+    // Workspace for child calls
+    double* child_ws = ws + 9 * h_sq;
 
     // M1 = (A11 + A22)(B11 + B22)
     for (int i = 0; i < h; i++) {
@@ -35,7 +47,7 @@ static void strassen_recursive_strided(double* A, int a_stride, double* B, int b
             T2[i*h + j] = B[i*b_stride + j] + B[(i+h)*b_stride + (j+h)];
         }
     }
-    strassen_recursive_strided(T1, h, T2, h, M1, h, h);
+    strassen_recursive_strided_ws(T1, h, T2, h, M1, h, h, child_ws);
 
     // M2 = (A21 + A22)B11
     for (int i = 0; i < h; i++) {
@@ -43,7 +55,7 @@ static void strassen_recursive_strided(double* A, int a_stride, double* B, int b
             T1[i*h + j] = A[(i+h)*a_stride + j] + A[(i+h)*a_stride + (j+h)];
         }
     }
-    strassen_recursive_strided(T1, h, B, b_stride, M2, h, h);
+    strassen_recursive_strided_ws(T1, h, B, b_stride, M2, h, h, child_ws);
 
     // M3 = A11(B12 - B22)
     for (int i = 0; i < h; i++) {
@@ -51,7 +63,7 @@ static void strassen_recursive_strided(double* A, int a_stride, double* B, int b
             T1[i*h + j] = B[i*b_stride + (j+h)] - B[(i+h)*b_stride + (j+h)];
         }
     }
-    strassen_recursive_strided(A, a_stride, T1, h, M3, h, h);
+    strassen_recursive_strided_ws(A, a_stride, T1, h, M3, h, h, child_ws);
 
     // M4 = A22(B21 - B11)
     for (int i = 0; i < h; i++) {
@@ -59,7 +71,7 @@ static void strassen_recursive_strided(double* A, int a_stride, double* B, int b
             T1[i*h + j] = B[(i+h)*b_stride + j] - B[i*b_stride + j];
         }
     }
-    strassen_recursive_strided(A + h*a_stride + h, a_stride, T1, h, M4, h, h);
+    strassen_recursive_strided_ws(A + h*a_stride + h, a_stride, T1, h, M4, h, h, child_ws);
 
     // M5 = (A11 + A12)B22
     for (int i = 0; i < h; i++) {
@@ -67,7 +79,7 @@ static void strassen_recursive_strided(double* A, int a_stride, double* B, int b
             T1[i*h + j] = A[i*a_stride + j] + A[i*a_stride + (j+h)];
         }
     }
-    strassen_recursive_strided(T1, h, B + h*b_stride + h, b_stride, M5, h, h);
+    strassen_recursive_strided_ws(T1, h, B + h*b_stride + h, b_stride, M5, h, h, child_ws);
 
     // M6 = (A21 - A11)(B11 + B12)
     for (int i = 0; i < h; i++) {
@@ -76,7 +88,7 @@ static void strassen_recursive_strided(double* A, int a_stride, double* B, int b
             T2[i*h + j] = B[i*b_stride + j] + B[i*b_stride + (j+h)];
         }
     }
-    strassen_recursive_strided(T1, h, T2, h, M6, h, h);
+    strassen_recursive_strided_ws(T1, h, T2, h, M6, h, h, child_ws);
 
     // M7 = (A12 - A22)(B21 + B22)
     for (int i = 0; i < h; i++) {
@@ -85,7 +97,7 @@ static void strassen_recursive_strided(double* A, int a_stride, double* B, int b
             T2[i*h + j] = B[(i+h)*b_stride + j] + B[(i+h)*b_stride + (j+h)];
         }
     }
-    strassen_recursive_strided(T1, h, T2, h, M7, h, h);
+    strassen_recursive_strided_ws(T1, h, T2, h, M7, h, h, child_ws);
 
     // Combine results directly into C (strided)
     for (int i = 0; i < h; i++) {
@@ -101,23 +113,21 @@ static void strassen_recursive_strided(double* A, int a_stride, double* B, int b
             C[(i+h)*c_stride + (j+h)] = c22;
         }
     }
-
-    freeMatrix(M1);
-    freeMatrix(M2);
-    freeMatrix(M3);
-    freeMatrix(M4);
-    freeMatrix(M5);
-    freeMatrix(M6);
-    freeMatrix(M7);
-    freeMatrix(T1);
-    freeMatrix(T2);
 }
 
 void strassen_strided(double* A, double* B, double* C, int n) {
     int np2 = next_power_of_2(n);
 
+    // Compute workspace size and allocate once
+    int ws_size = workspace_size(np2);
+    double* workspace = NULL;
+    if (ws_size > 0) {
+        workspace = (double*)malloc(ws_size * sizeof(double));
+    }
+
     if (np2 == n) {
-        strassen_recursive_strided(A, n, B, n, C, n, n);
+        strassen_recursive_strided_ws(A, n, B, n, C, n, n, workspace);
+        if (workspace) free(workspace);
         return;
     }
 
@@ -133,7 +143,7 @@ void strassen_strided(double* A, double* B, double* C, int n) {
         memcpy(B_ampliada + i*np2, B + i*n, n * sizeof(double));
     }
 
-    strassen_recursive_strided(A_ampliada, np2, B_ampliada, np2, C_ampliada, np2, np2);
+    strassen_recursive_strided_ws(A_ampliada, np2, B_ampliada, np2, C_ampliada, np2, np2, workspace);
 
     for (int i = 0; i < n; i++) {
         memcpy(C + i*n, C_ampliada + i*np2, n * sizeof(double));
@@ -142,4 +152,5 @@ void strassen_strided(double* A, double* B, double* C, int n) {
     freeMatrix(A_ampliada);
     freeMatrix(B_ampliada);
     freeMatrix(C_ampliada);
+    if (workspace) free(workspace);
 }
