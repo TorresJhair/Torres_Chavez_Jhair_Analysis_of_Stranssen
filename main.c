@@ -32,9 +32,7 @@ int main() {
         randomMatrix(B, n);
 
         double timeClassic = measureClassicMult(A, B, C_classic, n);
-        printf("CLASSIC TERIMNADO PARA N: %d", n);
         double timeStrassen = measureStrassen(A, B, C_strassen, n);
-        printf("STRASSEN TERIMNADO PARA N: %d", n);
 
         printf("%d\t%.3f\t%.3f\n", n, timeClassic, timeStrassen);
 
