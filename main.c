@@ -18,10 +18,10 @@ int main() {
     printf("# n classic_us strassen_us\n");
 
     for (int n = 2; n <= MATRIX_SIZE; n += STEP) {
-        double** A = allocMatrix(n);
-        double** B = allocMatrix(n);
-        double** C_classic = allocMatrix(n);
-        double** C_strassen = allocMatrix(n);
+        double* A = allocMatrix(n);
+        double* B = allocMatrix(n);
+        double* C_classic = allocMatrix(n);
+        double* C_strassen = allocMatrix(n);
 
         if (A == NULL || B == NULL || C_classic == NULL || C_strassen == NULL) {
             fprintf(stderr, "Error: no se pudo reservar memoria para n=%d\n", n);
@@ -32,14 +32,16 @@ int main() {
         randomMatrix(B, n);
 
         double timeClassic = measureClassicMult(A, B, C_classic, n);
+        printf("CLASSIC TERIMNADO PARA N: %d", n);
         double timeStrassen = measureStrassen(A, B, C_strassen, n);
+        printf("STRASSEN TERIMNADO PARA N: %d", n);
 
         printf("%d\t%.3f\t%.3f\n", n, timeClassic, timeStrassen);
 
-        freeMatrix(A, n);
-        freeMatrix(B, n);
-        freeMatrix(C_classic, n);
-        freeMatrix(C_strassen, n);
+        freeMatrix(A);
+        freeMatrix(B);
+        freeMatrix(C_classic);
+        freeMatrix(C_strassen);
     }
 
     return EXIT_SUCCESS;
