@@ -5,6 +5,7 @@
 #include "interfaces/matrix.h"
 #include "interfaces/mult_classic.h"
 #include "interfaces/strassen.h"
+#include "interfaces/strassen_strided.h"
 #include "interfaces/benchmark.h"
 
 #define SEED 42
@@ -15,15 +16,16 @@ int main() {
 
     srand(SEED);
 
-    printf("# n classic_us strassen_us\n");
+    printf("# n classic_us strassen_us strassen_strided_us\n");
 
     for (int n = 2; n <= MATRIX_SIZE; n += STEP) {
         double* A = allocMatrix(n);
         double* B = allocMatrix(n);
         double* C_classic = allocMatrix(n);
         double* C_strassen = allocMatrix(n);
+        double* C_strassen_strided = allocMatrix(n);
 
-        if (A == NULL || B == NULL || C_classic == NULL || C_strassen == NULL) {
+        if (A == NULL || B == NULL || C_classic == NULL || C_strassen == NULL || C_strassen_strided == NULL) {
             fprintf(stderr, "Error: no se pudo reservar memoria para n=%d\n", n);
             return EXIT_FAILURE;
         }
@@ -33,13 +35,15 @@ int main() {
 
         double timeClassic = measureClassicMult(A, B, C_classic, n);
         double timeStrassen = measureStrassen(A, B, C_strassen, n);
+        double timeStrassenStrided = measureStrassenStrided(A, B, C_strassen_strided, n);
 
-        printf("%d\t%.3f\t%.3f\n", n, timeClassic, timeStrassen);
+        printf("%d\t%.3f\t%.3f\t%.3f\n", n, timeClassic, timeStrassen, timeStrassenStrided);
 
         freeMatrix(A);
         freeMatrix(B);
         freeMatrix(C_classic);
         freeMatrix(C_strassen);
+        freeMatrix(C_strassen_strided);
     }
 
     return EXIT_SUCCESS;
