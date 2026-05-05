@@ -12,4 +12,7 @@ double measureClassicMult(double* A, double* B, double* C, int n);
 // Mide el tiempo de strassen en microsegundos (1/1000 ms)
 double measureStrassen(double* A, double* B, double* C, int n);
 
+// Mide el tiempo de strassen_strided en microsegundos (1/1000 ms)
+double measureStrassenStrided(double* A, double* B, double* C, int n);
+
 #endif

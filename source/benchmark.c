@@ -6,6 +6,7 @@
 #include "../interfaces/benchmark.h"
 #include "../interfaces/mult_classic.h"
 #include "../interfaces/strassen.h"
+#include "../interfaces/strassen_strided.h"
 
 // struct timespec almacena el tiempo en segundos (tv_sec) y nanosegundos (tv_nsec)
 // con alta precisión. 
@@ -44,6 +45,18 @@ double measureStrassen(double* A, double* B, double* C, int n) {
 
     clock_gettime(CLOCK_MONOTONIC, &start);
     strassen(A, B, C, n);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    return (double)elapsedNanoseconds(start, end) / 1000.0;
+}
+
+// Mismo esquema de medición que measureClassicMult para que sean comparables
+double measureStrassenStrided(double* A, double* B, double* C, int n) {
+    struct timespec start;
+    struct timespec end;
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    strassen_strided(A, B, C, n);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     return (double)elapsedNanoseconds(start, end) / 1000.0;
