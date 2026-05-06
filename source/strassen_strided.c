@@ -28,27 +28,6 @@ static void mult_classic_strided(double* restrict A, int a_stride,
         }
 }
 
-// Inlined Strassen for 2x2 strided matrices
-static void strassen_n2_strided(double* restrict A, int a_stride,
-                                  double* restrict B, int b_stride,
-                                  double* restrict C, int c_stride) {
-    double a11 = A[0], a12 = A[1], a21 = A[a_stride], a22 = A[a_stride + 1];
-    double b11 = B[0], b12 = B[1], b21 = B[b_stride], b22 = B[b_stride + 1];
-
-    double m1 = (a11 + a22) * (b11 + b22);
-    double m2 = (a21 + a22) * b11;
-    double m3 = a11 * (b12 - b22);
-    double m4 = a22 * (b21 - b11);
-    double m5 = (a11 + a12) * b22;
-    double m6 = (a21 - a11) * (b11 + b12);
-    double m7 = (a12 - a22) * (b21 + b22);
-
-    C[0] = m1 + m4 - m5 + m7;
-    C[1] = m3 + m5;
-    C[c_stride] = m2 + m4;
-    C[c_stride + 1] = m1 - m2 + m3 + m6;
-}
-
 // Compute workspace size: 9*(n/2)^2 at each level until cutoff
 static int workspace_size(int n) {
     if (n <= CUTOFF) return 0;
