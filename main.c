@@ -5,26 +5,28 @@
 #include "interfaces/matrix.h"
 #include "interfaces/mult_classic.h"
 #include "interfaces/strassen_strided.h"
+#include "interfaces/strassen_nearest_cutoff.h"
 #include "interfaces/benchmark.h"
 
 #define SEED 42
-#define MATRIX_SIZE 2048
+#define MATRIX_SIZE 512
 #define STEP 2
-#define RUNS 10
+#define RUNS 15
 
 int main() {
 
     srand(SEED);
 
-    printf("# n classic_us strassen_strided_us (promedio de %d ejecuciones)\n", RUNS);
+    printf("# n classic_us strassen_strided_us strassen_nearest_cutoff_us (promedio de %d ejecuciones)\n", RUNS);
 
-    for (int n = 2; n <= MATRIX_SIZE; n *= STEP) {
+    for (int n = 2; n <= MATRIX_SIZE; n += STEP) {
         double* A = allocMatrix(n);
         double* B = allocMatrix(n);
         double* C_classic = allocMatrix(n);
         double* C_strassen_strided = allocMatrix(n);
+        double* C_nearest_cutoff = allocMatrix(n);
 
-        if (A == NULL || B == NULL || C_classic == NULL || C_strassen_strided == NULL) {
+        if (A == NULL || B == NULL || C_classic == NULL || C_strassen_strided == NULL || C_nearest_cutoff == NULL) {
             fprintf(stderr, "Error: no se pudo reservar memoria para n=%d\n", n);
             return EXIT_FAILURE;
         }
@@ -32,22 +34,25 @@ int main() {
         randomMatrix(A, n);
         randomMatrix(B, n);
 
-        double totalClassic = 0, totalStrassenStrided = 0;
+        double totalClassic = 0, totalStrassenStrided = 0, totalNearestCutoff = 0;
 
         for (int r = 0; r < RUNS; r++) {
             totalClassic += measureClassicMult(A, B, C_classic, n);
             totalStrassenStrided += measureStrassenStrided(A, B, C_strassen_strided, n);
+            totalNearestCutoff += measureStrassenNearestCutoff(A, B, C_nearest_cutoff, n);
         }
 
         double avgClassic = totalClassic / RUNS;
         double avgStrassenStrided = totalStrassenStrided / RUNS;
+        double avgNearestCutoff = totalNearestCutoff / RUNS;
 
-        printf("%d\t%.3f\t%.3f\n", n, avgClassic, avgStrassenStrided);
+        printf("%d\t%.3f\t%.3f\t%.3f\n", n, avgClassic, avgStrassenStrided, avgNearestCutoff);
 
         freeMatrix(A);
         freeMatrix(B);
         freeMatrix(C_classic);
         freeMatrix(C_strassen_strided);
+        freeMatrix(C_nearest_cutoff);
     }
 
     return EXIT_SUCCESS;
