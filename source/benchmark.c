@@ -7,9 +7,10 @@
 #include "../interfaces/mult_classic.h"
 #include "../interfaces/strassen.h"
 #include "../interfaces/strassen_strided.h"
+#include "../interfaces/strassen_strided_64.h"
 
 // struct timespec almacena el tiempo en segundos (tv_sec) y nanosegundos (tv_nsec)
-// con alta precisión. 
+// con alta precision.
 
 // Convierte la diferencia de dos struct timespec a nanosegundos
 // 1 nanosegundo = 0.000000001 segundos 10^(-9) segs
@@ -62,3 +63,13 @@ double measureStrassenStrided(double* A, double* B, double* C, int n) {
     return (double)elapsedNanoseconds(start, end) / 1000.0;
 }
 
+double measureStrassenStrided64(double* A, double* B, double* C, int n) {
+    struct timespec start;
+    struct timespec end;
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    strassen_strided_64(A, B, C, n);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    return (double)elapsedNanoseconds(start, end) / 1000.0;
+}

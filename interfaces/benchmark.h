@@ -15,6 +15,9 @@ double measureStrassen(double* A, double* B, double* C, int n);
 // Mide el tiempo de strassen_strided en microsegundos (1/1000 ms)
 double measureStrassenStrided(double* A, double* B, double* C, int n);
 
+// Mide el tiempo de strassen_strided_64 en microsegundos (1/1000 ms)
+double measureStrassenStrided64(double* A, double* B, double* C, int n);
+
 // Mide el tiempo de strassen_nearest_cutoff en microsegundos (1/1000 ms)
 double measureStrassenNearestCutoff(double* A, double* B, double* C, int n);
 
