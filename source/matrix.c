@@ -16,9 +16,13 @@ void copyMatrix(double* A, double* B, int n) {
 }
 
 void randomMatrix(double* A, int n) {
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            A[i * n + j] = rand() % 10;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            // (rand() / RAND_MAX) genera un número entre 0 y 1
+            double r = (double)rand() / (double)RAND_MAX;
+            A[i * n + j] = r * 10.0; 
+        }
+    }
 }
 
 void zeroMatrix(double* M, int n) {
