@@ -4,12 +4,12 @@
 #include <time.h>
 #include "interfaces/matrix.h"
 #include "interfaces/mult_classic.h"
-#include "interfaces/strassen_strided.h"
-#include "interfaces/strassen_strided_64.h"
+#include "interfaces/strassen_multiple_cutoff.h"
+#include "interfaces/strassen_power_2.h"
 #include "interfaces/benchmark.h"
 
 #define SEED 42
-#define MATRIX_SIZE 512
+#define MATRIX_SIZE 256
 #define STEP 2
 #define RUNS 15
 
@@ -38,8 +38,8 @@ int main() {
 
         for (int r = 0; r < RUNS; r++) {
             totalClassic += measureClassicMult(A, B, C_classic, n);
-            totalStrided += measureStrassenStrided(A, B, C_strided, n);
-            totalStrided64 += measureStrassenStrided64(A, B, C_strided_64, n);
+            totalStrided += measureStrassenMultipleCutoff(A, B, C_strided, n);
+            totalStrided64 += measureStrassenPowerOf2(A, B, C_strided_64, n);
         }
 
         double avgClassic = totalClassic / RUNS;

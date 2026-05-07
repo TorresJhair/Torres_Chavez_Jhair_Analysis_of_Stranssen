@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../interfaces/matrix.h"
-#include "../interfaces/strassen_strided_64.h"
+#include "../interfaces/strassen_power_2.h"
 #include "../interfaces/mult_classic.h"
 
-#define CUTOFF 64
+#define CUTOFF 32
 
 static int next_power_of_2(int n) {
     int p = 1;
@@ -16,8 +16,6 @@ static int next_power_of_2(int n) {
 static int workspace_size(int n) {
     if (n <= CUTOFF) return 0;
     int h = n / 2;
-    if (h <= CUTOFF)
-        return 9 * h * h;
     return 9 * h * h + workspace_size(h);
 }
 

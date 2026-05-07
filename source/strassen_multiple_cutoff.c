@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../interfaces/matrix.h"
-#include "../interfaces/strassen_strided.h"
+#include "../interfaces/strassen_multiple_cutoff.h"
 #include "../interfaces/mult_classic.h"
 
 #define CUTOFF 32
