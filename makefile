@@ -1,7 +1,7 @@
 CC = gcc
 
-CFLAGS = -O3 -std=c11 -Wall -Wextra -Iinterfaces
-DBGFLAGS = -g -O0 -std=c11 -Wall -Wextra -Iinterfaces
+CFLAGS = -O3 -std=c11 -Wall -Wextra
+DBGFLAGS = -g -O0 -std=c11 -Wall -Wextra
 
 SRC = source/*.c
 TEST = test/*.c
